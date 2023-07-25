@@ -14,6 +14,7 @@ import { PermisisonModule } from './permisison/permisison.module';
 import { OrganizationModule } from './organization/organization.module';
 import { ModulesModule } from './modules/modules.module';
 import { ModulesMethodsModule } from './modules-methods/modules-methods.module';
+require("dotenv").config();
 
 const envFilePath: string = "../common/envs/.env"
 const config = new ConfigService();
@@ -22,7 +23,7 @@ const config = new ConfigService();
   imports: [
     ConfigModule.forRoot({ envFilePath, isGlobal: true }),
     MongooseModule.forRoot(
-      'mongodb+srv://admin:admin123@roundtechsquare.7e1pn.mongodb.net/Role_Management_Loyalty',
+      process.env.MONGODB_URI
     ),
     SchemasModule,
     UserModule,
