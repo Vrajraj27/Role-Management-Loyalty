@@ -76,6 +76,7 @@ export class PermisisonService {
           permissionCheckObject,
         );
         console.log(checkPermissionExists,"checkPermissionExists")
+        console.log(checkPermissionExists,"checkPermissionExists")
         if (!checkPermissionExists) {
           if (moduleName) {
             const checkModuleExists = await this.moduleModel.findOne({
