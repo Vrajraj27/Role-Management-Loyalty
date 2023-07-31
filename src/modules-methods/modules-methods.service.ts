@@ -39,18 +39,11 @@ export class ModulesMethodsService {
       } = await {
         ...createModulesMethodDto,
       };
-      console.log( organizationId,
-        moduleNameIn,
-        moduleNameNotIn,
-        method,
-        isActive,)
       const userId = req.user._id;
-      console.log(userId,"userId")
       const checkOrganization = await this.organizationModel.findOne({
         userId: userId,
         organizationId: organizationId,
       });
-      console.log(checkOrganization,"checkOrganization")
       if (!checkOrganization && organizationId) {
         throw new HttpException(
           'Organization not exits',
@@ -59,9 +52,9 @@ export class ModulesMethodsService {
       } else {
         const checkGloballyMethodExists = await this.methodModule.findOne({
           method: method,
-          isGlobally:true
+          isGlobally: true,
         });
-        if(checkGloballyMethodExists){
+        if (checkGloballyMethodExists) {
           throw new HttpException(
             'method already globally exits',
             HttpStatus.BAD_REQUEST,
@@ -74,11 +67,9 @@ export class ModulesMethodsService {
             ? checkOrganization._id
             : { $exists: false },
         });
-        console.log(checkMethodExists,"checkMethodExists")
         if (!checkMethodExists) {
           if (moduleNameIn?.length > 0 || moduleNameNotIn?.length > 0) {
             const uniqueMethodNameForIn = [...new Set(moduleNameIn)];
-            console.log('uniqueMethodNameForIn: ', uniqueMethodNameForIn);
             const uniqueMethodNameForNotIn = [...new Set(moduleNameNotIn)];
             if (
               moduleNameIn?.length == uniqueMethodNameForIn?.length ||
@@ -100,7 +91,6 @@ export class ModulesMethodsService {
                   }
                 }),
               );
-              console.log('moduleIdsArrayIn: ', moduleIdsArrayIn);
               await Promise.all(
                 uniqueMethodNameForNotIn.map(async (module) => {
                   const checkModule = await this.moduleModel.findOne({

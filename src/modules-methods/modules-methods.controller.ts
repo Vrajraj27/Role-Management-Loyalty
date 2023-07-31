@@ -15,7 +15,10 @@ import { CreateModulesMethodDto } from './dto/create-modules-method.dto';
 import { UpdateModulesMethodDto } from './dto/update-modules-method.dto';
 import { JwtAccessTokenGuard } from 'src/common/guards/jwt-access-token/jwt-access-token.guard';
 import { FormDataRequest } from 'nestjs-form-data';
-import { MethodDelete, ModulesMethodGet } from './entities/modules-method.entity';
+import {
+  MethodDelete,
+  ModulesMethodGet,
+} from './entities/modules-method.entity';
 import mongoose from 'mongoose';
 
 @Controller('modules-methods')
@@ -29,7 +32,6 @@ export class ModulesMethodsController {
     @Req() req: any,
     @Body() createModulesMethodDto: CreateModulesMethodDto,
   ) {
-    console.log(createModulesMethodDto)
     return this.modulesMethodsService.create(req, createModulesMethodDto);
   }
 

@@ -46,7 +46,6 @@ export class AuthService {
       let user = await this.userModel.create(insertData);
 
       delete user.password;
-      console.log('user: ', user);
       let returnJson = {
         access_token: this.jwtService.sign(user.toJSON()),
         refreshToken: this.jwtRefreshService.sign(user.toJSON()),
@@ -67,7 +66,6 @@ export class AuthService {
       const checkPassword = await verifyPassword(password, user.password);
       if (checkPassword) {
         delete user.password;
-        console.log('user: ', user);
         let json = {};
         return {
           access_token: this.jwtService.sign(user.toJSON()),
@@ -82,7 +80,6 @@ export class AuthService {
   }
 
   async refreshAccesstoken(@Req() req: any) {
-    console.log(req.user);
     const userId = req.user._id;
     let user = await this.userModel.findOne({ _id: userId });
     if (user) {

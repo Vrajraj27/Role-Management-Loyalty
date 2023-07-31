@@ -31,7 +31,6 @@ export class ModulesService {
       organizationId: organizationId,
       userId: userId,
     });
-    console.log('checkOrganizationExists: ', checkOrganizationExists);
     if (!checkOrganizationExists && organizationId) {
       throw new HttpException(
         'Organization is not exits',
@@ -141,18 +140,18 @@ export class ModulesService {
           as: 'organizationDetail',
         },
       });
-       aggregation_option.push({
-         $match: {
-           $expr: {
-             $or: [
-               { $eq: ['$isGlobally', isGlobally] },
-               {
-                 $eq: ['$organizationDetail.organizationId', organizationId],
-               },
-             ],
-           },
-         },
-       });
+      aggregation_option.push({
+        $match: {
+          $expr: {
+            $or: [
+              { $eq: ['$isGlobally', isGlobally] },
+              {
+                $eq: ['$organizationDetail.organizationId', organizationId],
+              },
+            ],
+          },
+        },
+      });
     }
     aggregation_option.push({
       $project: {
@@ -197,7 +196,6 @@ export class ModulesService {
           ? data.organizationId
           : { $exists: false },
       });
-      console.log('checkAlreadyExists: ', checkAlreadyExists);
       if (!checkAlreadyExists) {
         const updateData = await this.moduleModel.findByIdAndUpdate(
           {

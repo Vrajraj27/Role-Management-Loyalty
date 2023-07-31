@@ -43,18 +43,10 @@ export class PermisisonService {
     const { organizationId, roleName, name, permissions, moduleName } = await {
       ...createPermisisonDto,
     };
-    console.log(
-      organizationId,"organizationId",
-       roleName,"roleName",
-        name,"name", 
-        permissions, "permissions",
-         moduleName,"moduleName"
-         )
     const checkOrganization = await this.organizationModel.findOne({
       organizationId: organizationId,
       userId: userId,
     });
-    console.log(checkOrganization , "checkOrG")
     if (!checkOrganization && organizationId) {
       throw new HttpException('Organization not exits', HttpStatus.BAD_REQUEST);
     } else {
@@ -71,12 +63,9 @@ export class PermisisonService {
         if (moduleName) {
           permissionCheckObject.moduleName = moduleName;
         }
-        console.log(permissionCheckObject,"permissionCheckObject")
         const checkPermissionExists = await this.permissionModel.findOne(
           permissionCheckObject,
         );
-        console.log(checkPermissionExists,"checkPermissionExists")
-        console.log(checkPermissionExists,"checkPermissionExists")
         if (!checkPermissionExists) {
           if (moduleName) {
             const checkModuleExists = await this.moduleModel.findOne({
@@ -90,7 +79,6 @@ export class PermisisonService {
               //   $or: [{ $eq: checkOrganization._id }, { $exists: false }],
               // },
             });
-            console.log(checkModuleExists,"checkModuleExists")
             if (checkModuleExists) {
               var getMethods = await this.methodModule.find({
                 $and: [
@@ -115,15 +103,11 @@ export class PermisisonService {
                 ],
                 userId: userId,
               });
-              console.log(getMethods,"getMethods")
-              console.log(getMethods.length, "getMethods.length")
               if (getMethods.length > 0) {
                 var methodArray = [];
                 await Promise.all(
                   permissions.map(async (permission) => {
-                    console.log(permission,"permission")
                     const getFiltered = getMethods.filter((moduleMethod) => {
-                      console.log(moduleMethod,"moduleMethod")
                       if (moduleMethod.method == permission.method) {
                         methodArray.push(permission);
                         return;
@@ -131,15 +115,12 @@ export class PermisisonService {
                     });
                   }),
                 );
-                console.log(methodArray,"methodArray")
                 const checkPermissionAlreadyExists =
                   await this.permissionModel.findOne({
                     roleId: roleCheck._id,
                     moduleName: moduleName,
                   });
-                  console.log(checkPermissionAlreadyExists,"checkPermissionAlreadyExists")
                 if (!checkPermissionAlreadyExists) {
-                  console.log(methodArray.length == permissions.length,"methodArray.length == permissions.length" )
                   if (methodArray.length == permissions.length) {
                     const insertPermission = {
                       userId: userId,
@@ -157,7 +138,6 @@ export class PermisisonService {
                       HttpStatus.BAD_REQUEST,
                     );
                   }
-                  console.log()
                 } else {
                   throw new HttpException(
                     'Permission already exists!!',
@@ -281,7 +261,6 @@ export class PermisisonService {
     });
 
     const data = await this.permissionModel.aggregate(aggregation_option);
-    console.log(data)
     return { data: data };
   }
 
@@ -307,13 +286,6 @@ export class PermisisonService {
           });
           if (checkModule) {
             if (checkModule.isActive) {
-              console.log(
-                'checkOrganization._id: ',
-                checkOrganization._id,
-                req.user._id,
-                moduleName,
-              );
-
               const checkMethodPermission = await this.methodModule.findOne({
                 organizationId: checkOrganization._id,
                 userId: req.user._id,
@@ -360,7 +332,6 @@ export class PermisisonService {
             userId: req.user._id,
             roleId: checkRole._id,
           });
-          console.log('check: ', check);
           if (check) {
             const getPermissionArray = JSON.stringify(check.permissions);
             const getValue = JSON.parse(getPermissionArray).find(
@@ -395,7 +366,6 @@ export class PermisisonService {
       _id: id,
       userId: req.user._id,
     });
-    console.log('check: ', check);
     if (check) {
       if (check.moduleName) {
         const getRoleDetail = await this.roleModel.findOne({

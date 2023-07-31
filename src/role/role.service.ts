@@ -31,7 +31,6 @@ export class RoleService {
       organizationId: organizationId,
       userId: userId,
     });
-    console.log('checkOrganizationExists: ', checkOrganizationExists);
     if (!checkOrganizationExists) {
       throw new HttpException(
         'Organization is not exits',
@@ -58,7 +57,6 @@ export class RoleService {
 
   async findAll(req: any, query: RoleGet) {
     const { skip, limit, name, organizationId } = await { ...query };
-    console.log('skip: ', typeof skip);
     const aggregation_option = [];
     aggregation_option.push({
       $match: {

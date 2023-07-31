@@ -26,14 +26,11 @@ export class OrganizationService {
     private permissionModel: Model<PermissionDocument>,
   ) {}
   async create(req: any, createOrganizationDto: CreateOrganizationDto) {
-    console.log('createOrganizationDto: ', createOrganizationDto);
     const userId = req.user._id;
-    console.log('userId: ', userId);
     const checkOrganizationExists = await this.organizationModel.findOne({
       userId: userId,
       organizationId: createOrganizationDto.organizationId,
     });
-    console.log('checkOrganizationExists: ', checkOrganizationExists);
     if (!checkOrganizationExists) {
       let insertOrganization = {
         userId: userId,
@@ -97,7 +94,6 @@ export class OrganizationService {
       userId: userId,
       organizationId: id,
     });
-    console.log('checkOrganizationExists: ', checkOrganizationExists);
     if (checkOrganizationExists) {
       var roleIdArray = [];
       const checkOrganizationExistsDelete =
@@ -108,16 +104,16 @@ export class OrganizationService {
       const getRoles = await this.roleModel.find({
         organizationId: checkOrganizationExists._id,
       });
-      console.log('getRoles: ', getRoles);
-      await Promise.all(getRoles.map(async (element) => {
-        console.log('role: ', element);
-         const removePermissions = await this.permissionModel.deleteMany({
-           roleId: element._id,
-         });
-        const removeRoles = await this.roleModel.deleteOne({
-          _id: element._id,
-        });
-      }));
+      await Promise.all(
+        getRoles.map(async (element) => {
+          const removePermissions = await this.permissionModel.deleteMany({
+            roleId: element._id,
+          });
+          const removeRoles = await this.roleModel.deleteOne({
+            _id: element._id,
+          });
+        }),
+      );
       return { status: 'done' };
     } else {
       throw new NotFoundException('data not found');
